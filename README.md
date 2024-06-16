@@ -6,7 +6,6 @@ import java.util.Scanner;
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
     private static CheeseService cheeseService = new CheeseService();
-    private static CheeseShop cheeseShop = new CheeseShop();
 
     public static void main(String[] args) {
         while (true) {
@@ -14,33 +13,23 @@ public class Main {
             System.out.println("Press 2, to remove a cheese from the cart");
             System.out.println("Press 3, to update a cheese in the cart");
             System.out.println("Press 4, to print all cheeses in the cart");
-            System.out.println("Press 5, to checkout and print total");
-            System.out.println("Press 6, to exit");
-
+            System.out.println("Press 5, to exit");
             int action = scanner.nextInt();
             scanner.nextLine(); // Consume newline character after reading integer
 
-            switch (action) {
-                case 1:
-                    addCheese();
-                    break;
-                case 2:
-                    removeCheese();
-                    break;
-                case 3:
-                    updateCheese();
-                    break;
-                case 4:
-                    printCheeses();
-                    break;
-                case 5:
-                    checkout();
-                    break;
-                case 6:
-                    System.out.println("Exiting...");
-                    System.exit(0);
-                default:
-                    System.out.println("Invalid option. Please try again.");
+            if (action == 1) {
+                addCheese();
+            } else if (action == 2) {
+                removeCheese();
+            } else if (action == 3) {
+                updateCheese();
+            } else if (action == 4) {
+                printCheeses();
+            } else if (action == 5) {
+                System.out.println("Exiting...");
+                break;
+            } else {
+                System.out.println("Invalid option. Please try again.");
             }
         }
     }
@@ -52,22 +41,16 @@ public class Main {
         double price = Double.parseDouble(scanner.nextLine());
         System.out.println("Provide a cheese quantity:");
         int quantity = Integer.parseInt(scanner.nextLine());
-
-        Cheese cheese = new Cheese(name, price, quantity);
+        var cheese = new Cheese(name, price, quantity);
         cheeseService.addCheese(cheese);
-        cheeseShop.addCheeseToCart(cheese);
-
         System.out.println("Cheese added successfully.");
     }
 
     public static void removeCheese() {
         System.out.println("Provide the cheese name to remove:");
         String name = scanner.nextLine();
-
-        boolean removedFromService = cheeseService.removeCheese(name);
-        boolean removedFromShop = cheeseShop.getCart().removeIf(cheese -> cheese.getName().equals(name));
-
-        if (removedFromService && removedFromShop) {
+        boolean result = cheeseService.removeCheese(name);
+        if (result) {
             System.out.println("Cheese removed successfully.");
         } else {
             System.out.println("Cheese not found.");
@@ -81,20 +64,8 @@ public class Main {
         double price = Double.parseDouble(scanner.nextLine());
         System.out.println("Provide the new cheese quantity:");
         int quantity = Integer.parseInt(scanner.nextLine());
-
-        boolean updatedInService = cheeseService.updateCheese(name, price, quantity);
-        boolean updatedInShop = false;
-
-        for (Cheese cheese : cheeseShop.getCart()) {
-            if (cheese.getName().equals(name)) {
-                cheese.setPrice(price);
-                cheese.setQuantity(quantity);
-                updatedInShop = true;
-                break;
-            }
-        }
-
-        if (updatedInService || updatedInShop) {
+        boolean result = cheeseService.updateCheese(name, price, quantity);
+        if (result) {
             System.out.println("Cheese updated successfully.");
         } else {
             System.out.println("Cheese not found.");
@@ -103,16 +74,13 @@ public class Main {
 
     public static void printCheeses() {
         System.out.println("These are the cheeses in the cart:");
-        for (Cheese cheese : cheeseShop.getCart()) {
+        var cheeses = cheeseService.getCheeses();
+        for (var cheese : cheeses) {
             System.out.println("Name: " + cheese.getName() + ", Price: " + cheese.getPrice() + ", Quantity: " + cheese.getQuantity());
         }
     }
-
-    public static void checkout() {
-        double totalPrice = cheeseShop.checkout();
-        System.out.println("Total price of cheeses in cart: $" + totalPrice);
-    }
 }
+
 ```
 ## CHEESE
 ```java
