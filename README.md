@@ -8,7 +8,8 @@ public class Main {
     private static CheeseService cheeseService = new CheeseService();
 
     public static void main(String[] args) {
-        while (true) {
+        boolean running = true;
+        while (running) {
             System.out.println("Press 1, to add a cheese to the cart");
             System.out.println("Press 2, to remove a cheese from the cart");
             System.out.println("Press 3, to update a cheese in the cart");
@@ -27,6 +28,7 @@ public class Main {
                 printCheeses();
             } else if (action == 5) {
                 System.out.println("Exiting...");
+                running = false;
                 break;
             } else {
                 System.out.println("Invalid option. Please try again.");
@@ -80,6 +82,7 @@ public class Main {
         }
     }
 }
+
 
 ```
 ## CHEESE
